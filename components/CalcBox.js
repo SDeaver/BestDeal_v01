@@ -1,16 +1,35 @@
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { Text, View, Animated } from 'react-native';
 import { formatCurrency } from "react-native-format-currency";;
 import InputRow from './InputRow';
 import { allStyles } from '../styles/AllStyles';
 import { text } from '../styles/Text';
+import { animTiming } from '../styles/AnimTiming';
 
 
-export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayPricePerUnit, changeDisplayPricePerUnit } ) {
+export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayPricePerUnit, changeDisplayPricePerUnit, lockedPricePerUnit } ) {
 
    const [priceValue, setPriceValue] = useState('0');
    const [quantityValue, setQuantityValue] = useState('');
    const [pricePerUnit, setPricePerUnit] = useState('');
+
+   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+   function fadeIn() {
+      Animated.timing(fadeAnim, {
+         toValue: 1,
+         duration: animTiming.fadeInTime,
+         useNativeDriver: true,
+      }).start();
+   };
+
+   function fadeOut() {
+      Animated.timing(fadeAnim, {
+         toValue: 0,
+         duration: animTiming.fadeOutTime,
+         useNativeDriver: true,
+      }).start();
+   };
 
    function chooseDealStyle() {
 
@@ -36,30 +55,30 @@ export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayP
    }
 
    function updatePricePerUnit(priceVal, quantityVal) {
-
+     
       changeDisplayPricePerUnit(false);
       
       const newVal = (priceVal / quantityVal);
 
-      setPricePerUnit( () => {
-         return ( newVal );
-      } );
-      updatePricePerUnitInApp ( () => {
-         return ( newVal );
-      } );
+      setPricePerUnit(newVal);
+      updatePricePerUnitInApp (newVal);
    }
 
    function showPricePerUnit()
    {
       const [pricePerUnitOutput, valueFormattedWithoutSymbol, symbol] = formatCurrency({ amount: Number(pricePerUnit).toFixed(2), code: text.currencyCode })
+      const [lockedPricePerUnitOutput, lockedValueFormattedWithoutSymbol, lockedSymbol] = formatCurrency({ amount: Number(lockedPricePerUnit).toFixed(2), code: text.currencyCode })
 
       if (displayPricePerUnit) {
-         return (pricePerUnitOutput);
+         fadeIn();
+         return (pricePerUnitOutput);     
       }
       else {
-         return ('');
+         fadeOut();
+         return (lockedPricePerUnitOutput);
       }
    }
+
 
    return(
       <View style={chooseDealStyle()}>
@@ -78,12 +97,12 @@ export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayP
 
          <View style={allStyles.calcOutputContainer}>
             <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
-
             <View style={allStyles.calcBoxInputRow}>
-               <Text style={allStyles.calcBoxOutput}>{showPricePerUnit()}</Text>
+               <View style={allStyles.calcBoxOutput}>
+                  <Animated.Text style={[allStyles.calcBoxOutputText, {opacity: fadeAnim}]}>{showPricePerUnit()}</Animated.Text>
+               </View>
             </View>
          </View>
-
       </View>
    );
 

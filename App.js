@@ -1,5 +1,5 @@
-import React, {useState,useRef, useEffect} from 'react';
-import { Pressable, View, Keyboard, Text, Animated, InteractionManager } from 'react-native';
+import React, { useState } from 'react';
+import { Pressable, View, Keyboard } from 'react-native';
 import CalcBox from './components/CalcBox';
 import CompareButton from './components/CompareButton';
 import { allStyles } from './styles/AllStyles';
@@ -9,15 +9,19 @@ export default function App() {
 
   const [leftPricePerUnit, setLeftPricePerUnit] = useState('');
   const [rightPricePerUnit, setRightPricePerUnit] = useState('');
+  const [leftLockedPricePerUnit, setLeftLockedPricePerUnit] = useState('');
+  const [rightLockedPricePerUnit, setRightLockedPricePerUnit] = useState('');
   const [displayPricePerUnit, setDisplayPricePerUnit] = useState(false);
   const [leftIsBestDeal, setLeftIsBestDeal] = useState(false);
   const [rightIsBestDeal, setRightIsBestDeal] = useState(false);
 
 
   function changeDisplayPricePerUnit(newVal) {
+
     setDisplayPricePerUnit(newVal);
     setLeftIsBestDeal(false);
     setRightIsBestDeal(false);
+
   }
 
   function checkBadInput()
@@ -56,6 +60,8 @@ export default function App() {
     }
     else {
       setDisplayPricePerUnit(true);
+      setLeftLockedPricePerUnit(numLeft);
+      setRightLockedPricePerUnit(numRight);
     }
 
     if (numLeft < numRight) {
@@ -77,29 +83,24 @@ export default function App() {
     
   }  
 
-  function startFadeOutText() {
-
-    console.log('fading out');
-
-  }
-
-  function startFadeInText() {
-
-    console.log('fading in');
-
-  }
-
-  function currentNum() {
-    return (useRef(fadeAnim).current);
-  }
- 
-
   return (
     <Pressable style={allStyles.mainContainer} onPress={Keyboard.dismiss}>
 
       <View style={allStyles.calcBoxContainer}>
-        <CalcBox isBestDeal={leftIsBestDeal} updatePricePerUnitInApp={setLeftPricePerUnit} displayPricePerUnit={displayPricePerUnit} changeDisplayPricePerUnit={changeDisplayPricePerUnit}/>
-        <CalcBox isBestDeal={rightIsBestDeal} updatePricePerUnitInApp={setRightPricePerUnit} displayPricePerUnit={displayPricePerUnit} changeDisplayPricePerUnit={changeDisplayPricePerUnit}/>
+        <CalcBox
+          isBestDeal={leftIsBestDeal}
+          updatePricePerUnitInApp={setLeftPricePerUnit}
+          displayPricePerUnit={displayPricePerUnit}
+          changeDisplayPricePerUnit={changeDisplayPricePerUnit}
+          lockedPricePerUnit={leftLockedPricePerUnit}
+        />
+        <CalcBox
+          isBestDeal={rightIsBestDeal}
+          updatePricePerUnitInApp={setRightPricePerUnit}
+          displayPricePerUnit={displayPricePerUnit}
+          changeDisplayPricePerUnit={changeDisplayPricePerUnit}
+          lockedPricePerUnit={rightLockedPricePerUnit}
+        />
       </View>
 
       <View style={allStyles.compareButtonContainer}>

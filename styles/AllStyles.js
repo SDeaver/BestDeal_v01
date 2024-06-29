@@ -60,8 +60,10 @@ export const allStyles = StyleSheet.create ({
     calcBoxOutput: {
         flex: 0.95,
         borderWidth: 1,
-        padding: 5,
         backgroundColor: 'ghostwhite',
+    },
+    calcBoxOutputText: {
+        padding: 5,
         fontSize: 20,
         textAlign: 'center'
     },
@@ -86,7 +88,6 @@ export const allStyles = StyleSheet.create ({
         textAlign: 'center',
         textAlignVertical: 'center'
     },
-
     compareButton: {
         marginTop: 20,
         alignSelf: 'center',
@@ -108,7 +109,8 @@ export const allStyles = StyleSheet.create ({
         alignSelf: 'center',
         height: '20%',
         width: '35%',
-        borderWidth: 0.5,
+        borderWidth: 1,
+        opacity: 0.5,
         backgroundColor: 'white'
     },
     compareButtonText:{
