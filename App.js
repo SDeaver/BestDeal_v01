@@ -17,7 +17,6 @@ export default function App() {
 
 
   function changeDisplayPricePerUnit(newVal) {
-
     setDisplayPricePerUnit(newVal);
     setLeftIsBestDeal(false);
     setRightIsBestDeal(false);
@@ -26,8 +25,10 @@ export default function App() {
 
   function checkBadInput()
   {
-
     if (leftPricePerUnit == '') {
+      return true;
+    }
+    else if (leftPricePerUnit <= 0) {
       return true;
     }
     else if (leftPricePerUnit == 'Infinity') {
@@ -37,6 +38,9 @@ export default function App() {
       return true;
     }
     else if (rightPricePerUnit == '') {
+      return true;
+    }
+    else if (rightPricePerUnit <= 0) {
       return true;
     }
     else if (rightPricePerUnit == 'Infinity') {
@@ -58,29 +62,14 @@ export default function App() {
     if (checkBadInput()) {
       return;
     }
-    else {
-      setDisplayPricePerUnit(true);
-      setLeftLockedPricePerUnit(numLeft);
-      setRightLockedPricePerUnit(numRight);
-    }
-
-    if (numLeft < numRight) {
-      setLeftIsBestDeal(true);
-      setRightIsBestDeal(false);
-    }
-    else if (numLeft > numRight) {
-      setLeftIsBestDeal(false);
-      setRightIsBestDeal(true);
-    }
-    else if (numLeft === numRight) {
-      setLeftIsBestDeal(true);
-      setRightIsBestDeal(true);
-    }
-    else {
-      setLeftIsBestDeal(false);
-      setRightIsBestDeal(false);
-    }
-    
+ 
+    setDisplayPricePerUnit(true);
+    setLeftLockedPricePerUnit(numLeft);
+    setRightLockedPricePerUnit(numRight);
+ 
+    setLeftIsBestDeal(!(numLeft > numRight));
+    setRightIsBestDeal(!(numLeft < numRight));
+  
   }  
 
   return (

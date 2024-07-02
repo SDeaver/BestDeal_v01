@@ -20,7 +20,7 @@ export const allStyles = StyleSheet.create ({
         borderWidth: 0.5,
         padding: 10,
         height: '100%',
-        backgroundColor: 'lightgrey',
+        backgroundColor: 'rgb(220,220,220)',
     },
     calcBoxBestDeal: {
         flex: 0.45,
@@ -94,7 +94,7 @@ export const allStyles = StyleSheet.create ({
         height: '20%',
         width: '35%',
         borderWidth: 0.5,
-        backgroundColor: 'lightgrey'
+        backgroundColor: 'rgb(220,220,220)'
     },
     compareButtonPressed: {
         marginTop: 20,

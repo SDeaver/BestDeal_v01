@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Text, View, Animated } from 'react-native';
 import { formatCurrency } from "react-native-format-currency";;
 import InputRow from './InputRow';
@@ -13,14 +13,17 @@ export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayP
    const [quantityValue, setQuantityValue] = useState('');
    const [pricePerUnit, setPricePerUnit] = useState('');
 
-   const fadeAnim = useRef(new Animated.Value(0)).current;
+   const fadeAnim = useRef(new Animated.Value(1)).current;
 
    function fadeIn() {
+
       Animated.timing(fadeAnim, {
          toValue: 1,
          duration: animTiming.fadeInTime,
          useNativeDriver: true,
-      }).start();
+      }).start(() => { fadeAnim.removeAllListeners(); });
+
+      console.log('firing fadeIn');
    };
 
    function fadeOut() {
@@ -31,13 +34,12 @@ export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayP
       }).start();
    };
 
-   function chooseDealStyle() {
+   function chooseBoxStyle() {
 
       if (isBestDeal) {
          return (allStyles.calcBoxBestDeal);
       }
-      else
-      {
+      else {
          return (allStyles.calcBox);
       }
    }
@@ -64,8 +66,7 @@ export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayP
       updatePricePerUnitInApp (newVal);
    }
 
-   function showPricePerUnit()
-   {
+   function showPricePerUnit() {
       const [pricePerUnitOutput, valueFormattedWithoutSymbol, symbol] = formatCurrency({ amount: Number(pricePerUnit).toFixed(2), code: text.currencyCode })
       const [lockedPricePerUnitOutput, lockedValueFormattedWithoutSymbol, lockedSymbol] = formatCurrency({ amount: Number(lockedPricePerUnit).toFixed(2), code: text.currencyCode })
 
@@ -79,9 +80,8 @@ export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayP
       }
    }
 
-
    return(
-      <View style={chooseDealStyle()}>
+      <Animated.View style={chooseBoxStyle()}>
 
          <View style={allStyles.calcInputContainer}>
             <Text style={allStyles.priceTitle}>{text.price}</Text>
@@ -103,7 +103,8 @@ export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayP
                </View>
             </View>
          </View>
-      </View>
+
+      </Animated.View>
    );
 
 }  
