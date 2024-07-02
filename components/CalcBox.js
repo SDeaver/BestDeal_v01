@@ -1,84 +1,67 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Text, View, Animated } from 'react-native';
-import { formatCurrency } from "react-native-format-currency";;
+import { formatCurrency } from "react-native-format-currency";
 import InputRow from './InputRow';
 import { allStyles } from '../styles/AllStyles';
 import { text } from '../styles/Text';
-import { animTiming } from '../styles/AnimTiming';
 
 
-export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayPricePerUnit, changeDisplayPricePerUnit, lockedPricePerUnit } ) {
+export default function CalcBox( { isBestDeal, updatePricePerUnit, displayedPricePerUnit, stylePricePerUnit } ) {
 
    const [priceValue, setPriceValue] = useState('0');
    const [quantityValue, setQuantityValue] = useState('');
-   const [pricePerUnit, setPricePerUnit] = useState('');
+   // const [pricePerUnit, setPricePerUnit] = useState('');
 
-   const fadeAnim = useRef(new Animated.Value(1)).current;
+   // useEffect(() => {
 
-   function fadeIn() {
+   //    console.log(stylePricePerUnit);
 
-      Animated.timing(fadeAnim, {
-         toValue: 1,
-         duration: animTiming.fadeInTime,
-         useNativeDriver: true,
-      }).start(() => { fadeAnim.removeAllListeners(); });
+   //  }, [stylePricePerUnit]);
 
-      console.log('firing fadeIn');
-   };
+   
 
-   function fadeOut() {
-      Animated.timing(fadeAnim, {
-         toValue: 0,
-         duration: animTiming.fadeOutTime,
-         useNativeDriver: true,
-      }).start();
-   };
 
-   function chooseBoxStyle() {
-
-      if (isBestDeal) {
-         return (allStyles.calcBoxBestDeal);
-      }
-      else {
-         return (allStyles.calcBox);
-      }
-   }
 
    function updatePriceValue(newValue) {
 
       setPriceValue(newValue);
-      updatePricePerUnit(newValue, quantityValue);
+      updatePricePerUnit (newValue / quantityValue);
+
+
    }
 
    function updateQuantityValue(newValue) {
 
       setQuantityValue(newValue);
-      updatePricePerUnit(priceValue, newValue);
+      updatePricePerUnit (priceValue / newValue);
+
    }
 
-   function updatePricePerUnit(priceVal, quantityVal) {
-     
-      changeDisplayPricePerUnit(false);
-      
-      const newVal = (priceVal / quantityVal);
+   // function showPricePerUnit() {
+   //    const [pricePerUnitOutput, valueFormattedWithoutSymbol, symbol] = formatCurrency({ amount: Number(pricePerUnit).toFixed(2), code: text.currencyCode })
+   //    const [lockedPricePerUnitOutput, lockedValueFormattedWithoutSymbol, lockedSymbol] = formatCurrency({ amount: Number(lockedPricePerUnit).toFixed(2), code: text.currencyCode })
 
-      setPricePerUnit(newVal);
-      updatePricePerUnitInApp (newVal);
-   }
+   //    if (displayPricePerUnit === 'show') {
+   //       return (pricePerUnitOutput);
+   //    }
+   //    else if (displayPricePerUnit === 'startFadeIn') {
+   //       setDisplayPricePerUnit('show');
+   //       fadeIn();
+   //       return (pricePerUnitOutput);
+   //    }
+   //    else if (displayPricePerUnit === 'startFadeOut') {
+   //       setDisplayPricePerUnit('hide');
+   //       fadeOut();
+   //       return (lockedPricePerUnitOutput);
+   //    }
+   //    else if (displayPricePerUnit === 'hide') {
+   //       return (lockedPricePerUnitOutput);
+   //    }
+   //    else {
+   //       return ('');
+   //    }
 
-   function showPricePerUnit() {
-      const [pricePerUnitOutput, valueFormattedWithoutSymbol, symbol] = formatCurrency({ amount: Number(pricePerUnit).toFixed(2), code: text.currencyCode })
-      const [lockedPricePerUnitOutput, lockedValueFormattedWithoutSymbol, lockedSymbol] = formatCurrency({ amount: Number(lockedPricePerUnit).toFixed(2), code: text.currencyCode })
-
-      if (displayPricePerUnit) {
-         fadeIn();
-         return (pricePerUnitOutput);     
-      }
-      else {
-         fadeOut();
-         return (lockedPricePerUnitOutput);
-      }
-   }
+   // }
 
    return(
       <Animated.View style={chooseBoxStyle()}>
@@ -99,7 +82,7 @@ export default function CalcBox( { isBestDeal, updatePricePerUnitInApp, displayP
             <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
             <View style={allStyles.calcBoxInputRow}>
                <View style={allStyles.calcBoxOutput}>
-                  <Animated.Text style={[allStyles.calcBoxOutputText, {opacity: fadeAnim}]}>{showPricePerUnit()}</Animated.Text>
+                  <Animated.Text style={stylePricePerUnit}>{displayedPricePerUnit}</Animated.Text>
                </View>
             </View>
          </View>

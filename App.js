@@ -1,52 +1,124 @@
-import React, { useState } from 'react';
-import { Pressable, View, Keyboard } from 'react-native';
-import CalcBox from './components/CalcBox';
+import React, { useState, useRef } from 'react';
+import { Text, Pressable, View, Keyboard, Animated } from 'react-native';
+import { formatCurrency } from "react-native-format-currency";
+
+import InputRow from './components/InputRow';
 import CompareButton from './components/CompareButton';
+
 import { allStyles } from './styles/AllStyles';
-// import { text } from './styles/TitleText';
+import { animTiming } from './styles/AnimTiming';
+import { text } from './styles/Text';
+
+
 
 export default function App() {
 
-  const [leftPricePerUnit, setLeftPricePerUnit] = useState('');
-  const [rightPricePerUnit, setRightPricePerUnit] = useState('');
-  const [leftLockedPricePerUnit, setLeftLockedPricePerUnit] = useState('');
-  const [rightLockedPricePerUnit, setRightLockedPricePerUnit] = useState('');
-  const [displayPricePerUnit, setDisplayPricePerUnit] = useState(false);
+  const [leftPrice, setLeftPrice] = useState('0');
+  const [rightPrice, setRightPrice] = useState('0');
+  const [leftQuantity, setLeftQuantity] = useState('');
+  const [rightQuantity, setRightQuantity] = useState('');
+  const [leftDisplayedPricePerUnit, setLeftDisplayedPricePerUnit] = useState('');
+  const [rightDisplayedPricePerUnit, setRightDisplayedPricePerUnit] = useState('');
   const [leftIsBestDeal, setLeftIsBestDeal] = useState(false);
   const [rightIsBestDeal, setRightIsBestDeal] = useState(false);
+  const [fadedOut, setFadedOut] = useState(true);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
 
-  function changeDisplayPricePerUnit(newVal) {
-    setDisplayPricePerUnit(newVal);
+  function fadeIn() {
+
+     Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: animTiming.fadeInTime,
+        useNativeDriver: true,
+     }).start(() => {
+        fadeAnim.removeAllListeners();
+     });
+
+     console.log('firing fadeIn');
+
+  };
+
+  function fadeOut() {
+
+     Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: animTiming.fadeOutTime,
+        useNativeDriver: true,
+      }).start(() => {
+        setFadedOut(true);
+        fadeAnim.removeAllListeners();
+     });
+
+     console.log('firing fadeOut');
+  };
+
+  function chooseBoxStyle(isBestDeal) {
+
+    if (isBestDeal) {
+       return (allStyles.calcBoxBestDeal);
+    }
+    else {
+       return (allStyles.calcBox);
+    }
+
+  }
+
+  function updateLeftPrice(newVal) {
+    resetOutput();
+    setLeftPrice(newVal);
+  }
+
+  function updateRightPrice(newVal) {
+    resetOutput();
+    setRightPrice(newVal);
+  }
+
+  function updatetLeftQuantity(newVal) {
+    resetOutput();
+    setLeftQuantity(newVal);
+  }
+
+  function updateRightQuantity(newVal) {
+    resetOutput();
+    setRightQuantity(newVal);
+  }
+
+  function resetOutput() {
+
+    if (fadedOut) {
+      return;
+    }
+
     setLeftIsBestDeal(false);
     setRightIsBestDeal(false);
+
+    fadeOut();
 
   }
 
   function checkBadInput()
   {
-    if (leftPricePerUnit == '') {
+    if (leftPrice == 0) {
       return true;
     }
-    else if (leftPricePerUnit <= 0) {
+    else if (rightPrice == 0) {
       return true;
     }
-    else if (leftPricePerUnit == 'Infinity') {
+    else if (leftQuantity <= 0)
+    {
       return true;
     }
-    else if (isNaN(leftPricePerUnit)) {
+    else if (rightQuantity <= 0)
+    {
       return true;
     }
-    else if (rightPricePerUnit == '') {
+    else if (isNaN(leftQuantity))
+    {
       return true;
     }
-    else if (rightPricePerUnit <= 0) {
-      return true;
-    }
-    else if (rightPricePerUnit == 'Infinity') {
-      return true;
-    }
-    else if (isNaN(rightPricePerUnit)) {
+    else if (isNaN(rightQuantity))
+    {
       return true;
     }
     else {
@@ -54,46 +126,85 @@ export default function App() {
     }
   }
 
-  function finalCompare() {
+  function outputCompare() {
 
-    const numLeft = Number(leftPricePerUnit);
-    const numRight = Number(rightPricePerUnit);
+    const leftPricePerUnit = Number( leftPrice / leftQuantity );
+    const rightPricePerUnit = Number( rightPrice / rightQuantity);
 
-    if (checkBadInput()) {
-      return;
-    }
- 
-    setDisplayPricePerUnit(true);
-    setLeftLockedPricePerUnit(numLeft);
-    setRightLockedPricePerUnit(numRight);
- 
-    setLeftIsBestDeal(!(numLeft > numRight));
-    setRightIsBestDeal(!(numLeft < numRight));
-  
+    const [leftPricePerUnitOutput, leftValueFormattedWithoutSymbol, leftSymbol] = formatCurrency({ amount: Number(leftPricePerUnit).toFixed(2), code: text.currencyCode });
+    const [rightPricePerUnitOutput, rightValueFormattedWithoutSymbol, rightSymbol] = formatCurrency({ amount: Number(rightPricePerUnit).toFixed(2), code: text.currencyCode });
+
+    setLeftDisplayedPricePerUnit(leftPricePerUnitOutput); 
+    setRightDisplayedPricePerUnit(rightPricePerUnitOutput);
+
+    setLeftIsBestDeal(!(leftPricePerUnit > rightPricePerUnit));
+    setRightIsBestDeal(!(leftPricePerUnit < rightPricePerUnit));
+
+    fadeIn(); 
+    setFadedOut(false);
   }  
 
   return (
     <Pressable style={allStyles.mainContainer} onPress={Keyboard.dismiss}>
 
       <View style={allStyles.calcBoxContainer}>
-        <CalcBox
-          isBestDeal={leftIsBestDeal}
-          updatePricePerUnitInApp={setLeftPricePerUnit}
-          displayPricePerUnit={displayPricePerUnit}
-          changeDisplayPricePerUnit={changeDisplayPricePerUnit}
-          lockedPricePerUnit={leftLockedPricePerUnit}
-        />
-        <CalcBox
-          isBestDeal={rightIsBestDeal}
-          updatePricePerUnitInApp={setRightPricePerUnit}
-          displayPricePerUnit={displayPricePerUnit}
-          changeDisplayPricePerUnit={changeDisplayPricePerUnit}
-          lockedPricePerUnit={rightLockedPricePerUnit}
-        />
+
+        {/* left box */}
+        <Animated.View style={chooseBoxStyle(leftIsBestDeal)}>
+
+          <View style={allStyles.calcInputContainer}>
+            <Text style={allStyles.priceTitle}>{text.price}</Text>
+            <InputRow type={'price'} defaultValue={'0'} updateValue={updateLeftPrice}/>
+          </View>
+
+          <View style={allStyles.calcInputContainer}>
+            <Text style={allStyles.quantityTitle}>{text.quantity}</Text>
+            <InputRow type={'quantity'} defaultValue={''} updateValue={updatetLeftQuantity}/>
+          </View>
+
+          <View style={allStyles.calcInputContainer}></View>
+
+          <View style={allStyles.calcOutputContainer}>
+            <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
+            <View style={allStyles.calcBoxInputRow}>
+                <View style={allStyles.calcBoxOutput}>
+                  <Animated.Text style={[allStyles.calcBoxOutputText, {opacity: fadeAnim}]}>{leftDisplayedPricePerUnit}</Animated.Text>
+                </View>
+            </View>
+          </View>
+
+        </Animated.View>
+
+        {/* right box */}
+        <Animated.View style={chooseBoxStyle(rightIsBestDeal)}>
+
+          <View style={allStyles.calcInputContainer}>
+            <Text style={allStyles.priceTitle}>{text.price}</Text>
+            <InputRow type={'price'} defaultValue={'0'} updateValue={updateRightPrice}/>
+          </View>
+
+          <View style={allStyles.calcInputContainer}>
+            <Text style={allStyles.quantityTitle}>{text.quantity}</Text>
+            <InputRow type={'quantity'} defaultValue={''} updateValue={updateRightQuantity}/>
+          </View>
+
+          <View style={allStyles.calcInputContainer}></View>
+
+          <View style={allStyles.calcOutputContainer}>
+            <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
+            <View style={allStyles.calcBoxInputRow}>
+                <View style={allStyles.calcBoxOutput}>
+                  <Animated.Text style={[allStyles.calcBoxOutputText, {opacity: fadeAnim}]}>{rightDisplayedPricePerUnit}</Animated.Text>
+                </View>
+            </View>
+          </View>
+
+        </Animated.View>
+
       </View>
 
       <View style={allStyles.compareButtonContainer}>
-        <CompareButton pressFunction={finalCompare} buttonIsLocked={checkBadInput()}/>
+        <CompareButton pressFunction={outputCompare} buttonIsLocked={checkBadInput()}/>
       </View>
 
       <View style={allStyles.footer}>
