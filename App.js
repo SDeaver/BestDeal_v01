@@ -23,19 +23,22 @@ export default function App() {
   const [rightDisplayedPricePerUnit, setRightDisplayedPricePerUnit] = useState('');
   const [leftIsBestDeal, setLeftIsBestDeal] = useState(false);
   const [rightIsBestDeal, setRightIsBestDeal] = useState(false);
+  const [bestDealStyle, setBestDealStyle] = useState(allStyles.calcBox);
   const [fadedOut, setFadedOut] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeBoxAnim = useRef(new Animated.Value(0)).current;
 
 
   function pricePerUnitFadeIn(leftVal, rightVal) {
 
-     Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: animTiming.fadeInTime,
-        useNativeDriver: true,
-     }).start(() => {
-        fadeAnim.removeAllListeners();
-     });
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: animTiming.fadeInTime,
+      useNativeDriver: true,
+    }).start(() => {
+      bestDealBoxFadeIn();
+      fadeAnim.removeAllListeners();
+    });
 
     const listenerId = fadeAnim.addListener((newFadeVal) => {
         let lPricePerUnit = (newFadeVal.value * leftVal);
@@ -47,7 +50,7 @@ export default function App() {
         setRightDisplayedPricePerUnit(rPricePerUnitOutput);
     })
 
-  };
+  }
 
   function pricePerUnitFadeOut() {
 
@@ -60,15 +63,55 @@ export default function App() {
         fadeAnim.removeAllListeners();
      });
 
-    };
+  }
+
+  function bestDealBoxFadeIn() {
+
+    Animated.timing(fadeBoxAnim, {
+      toValue: 35,
+      duration: animTiming.fadeInBoxTime,
+      useNativeDriver: true,
+    }).start(() => {
+      fadeBoxAnim.removeAllListeners();
+    });
+
+    const listenerId = fadeBoxAnim.addListener((newFadeVal) => {
+      const colorChange = newFadeVal.value;
+      const newColor = 'rgb(220,' + (220 + colorChange) + ',220)';
+      console.log(newColor);
+      setBestDealStyle([allStyles.calcBox, {backgroundColor: newColor}]);
+    })
+  
+  }
+
+  function bestDealBoxFadeOut() {
+
+    Animated.timing(fadeBoxAnim, {
+      toValue: 0,
+      duration: animTiming.fadeOutBoxTime,
+      useNativeDriver: true,
+    }).start(() => {
+      setLeftIsBestDeal(false);
+      setRightIsBestDeal(false);
+      fadeBoxAnim.removeAllListeners();
+    });
+
+    const listenerId = fadeBoxAnim.addListener((newFadeVal) => {
+      const colorChange = newFadeVal.value;
+      const newColor = 'rgb(220,' + (220 + colorChange) + ',220)';
+      console.log(newColor);
+      setBestDealStyle([allStyles.calcBox, {backgroundColor: newColor}]);
+    })
+  
+  }
 
   function chooseBoxStyle(isBestDeal) {
 
     if (isBestDeal) {
-       return (allStyles.calcBoxBestDeal);
+      return (bestDealStyle);
     }
     else {
-       return (allStyles.calcBox);
+      return (allStyles.calcBox);
     }
 
   }
@@ -98,11 +141,8 @@ export default function App() {
     if (fadedOut) {
       return;
     }
-
-    setLeftIsBestDeal(false);
-    setRightIsBestDeal(false);
-
     pricePerUnitFadeOut();
+    bestDealBoxFadeOut();
 
   }
 
