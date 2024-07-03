@@ -145,6 +145,7 @@ export default function App() {
   }  
 
   return (
+
     <Pressable style={allStyles.mainContainer} onPress={Keyboard.dismiss}>
 
       <View style={allStyles.calcBoxContainer}>
