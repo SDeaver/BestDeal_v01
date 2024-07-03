@@ -17,6 +17,8 @@ export default function App() {
   const [rightPrice, setRightPrice] = useState('0');
   const [leftQuantity, setLeftQuantity] = useState('');
   const [rightQuantity, setRightQuantity] = useState('');
+  const [leftPricePerUnit, setLeftPricePerUnit] = useState('');
+  const [rightPricePerUnit, setRightPricePerUnit] = useState('');
   const [leftDisplayedPricePerUnit, setLeftDisplayedPricePerUnit] = useState('');
   const [rightDisplayedPricePerUnit, setRightDisplayedPricePerUnit] = useState('');
   const [leftIsBestDeal, setLeftIsBestDeal] = useState(false);
@@ -25,7 +27,7 @@ export default function App() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
 
-  function fadeIn() {
+  function pricePerUnitFadeIn(leftVal, rightVal) {
 
      Animated.timing(fadeAnim, {
         toValue: 1,
@@ -35,11 +37,19 @@ export default function App() {
         fadeAnim.removeAllListeners();
      });
 
-     console.log('firing fadeIn');
+    const listenerId = fadeAnim.addListener((newFadeVal) => {
+        let lPricePerUnit = (newFadeVal.value * leftVal);
+        let rPricePerUnit = (newFadeVal.value * rightVal);
+        const [lPricePerUnitOutput, lValueFormattedWithoutSymbol, lSymbol] = formatCurrency({ amount: Number(lPricePerUnit).toFixed(2), code: text.currencyCode });
+        const [rPricePerUnitOutput, rValueFormattedWithoutSymbol, rSymbol] = formatCurrency({ amount: Number(rPricePerUnit).toFixed(2), code: text.currencyCode });
+
+        setLeftDisplayedPricePerUnit(lPricePerUnitOutput);
+        setRightDisplayedPricePerUnit(rPricePerUnitOutput);
+    })
 
   };
 
-  function fadeOut() {
+  function pricePerUnitFadeOut() {
 
      Animated.timing(fadeAnim, {
         toValue: 0,
@@ -50,8 +60,7 @@ export default function App() {
         fadeAnim.removeAllListeners();
      });
 
-     console.log('firing fadeOut');
-  };
+    };
 
   function chooseBoxStyle(isBestDeal) {
 
@@ -93,7 +102,7 @@ export default function App() {
     setLeftIsBestDeal(false);
     setRightIsBestDeal(false);
 
-    fadeOut();
+    pricePerUnitFadeOut();
 
   }
 
@@ -126,21 +135,22 @@ export default function App() {
     }
   }
 
+
   function outputCompare() {
 
-    const leftPricePerUnit = Number( leftPrice / leftQuantity );
-    const rightPricePerUnit = Number( rightPrice / rightQuantity);
+    const lPricePerUnit = Number( leftPrice / leftQuantity );
+    const rPricePerUnit = Number( rightPrice / rightQuantity);
 
-    const [leftPricePerUnitOutput, leftValueFormattedWithoutSymbol, leftSymbol] = formatCurrency({ amount: Number(leftPricePerUnit).toFixed(2), code: text.currencyCode });
-    const [rightPricePerUnitOutput, rightValueFormattedWithoutSymbol, rightSymbol] = formatCurrency({ amount: Number(rightPricePerUnit).toFixed(2), code: text.currencyCode });
+    setLeftPricePerUnit(lPricePerUnit); 
+    setRightPricePerUnit(rPricePerUnit);
 
-    setLeftDisplayedPricePerUnit(leftPricePerUnitOutput); 
-    setRightDisplayedPricePerUnit(rightPricePerUnitOutput);
+    setLeftIsBestDeal(!(lPricePerUnit > rPricePerUnit));
+    setRightIsBestDeal(!(lPricePerUnit < rPricePerUnit));
+    
+    setLeftDisplayedPricePerUnit('$0.00');
+    setRightDisplayedPricePerUnit('$0.00');
 
-    setLeftIsBestDeal(!(leftPricePerUnit > rightPricePerUnit));
-    setRightIsBestDeal(!(leftPricePerUnit < rightPricePerUnit));
-
-    fadeIn(); 
+    pricePerUnitFadeIn(lPricePerUnit, rPricePerUnit); 
     setFadedOut(false);
   }  
 

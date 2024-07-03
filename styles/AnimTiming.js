@@ -1,4 +1,4 @@
 export const animTiming = {
-   fadeInTime: 1000,
+   fadeInTime: 500,
    fadeOutTime: 300
 }
