@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Text, Pressable, View, Keyboard, Animated } from 'react-native';
+import { Text, Image, Pressable, View, Keyboard, Animated } from 'react-native';
 import { formatCurrency } from "react-native-format-currency";
 
 import InputRow from './components/InputRow';
@@ -7,6 +7,7 @@ import CompareButton from './components/CompareButton';
 
 import { allStyles } from './styles/AllStyles';
 import { animTiming } from './styles/AnimTiming';
+import { imageList } from './styles/ImageList'
 import { text } from './styles/Text';
 
 
@@ -78,7 +79,6 @@ export default function App() {
     const listenerId = fadeBoxAnim.addListener((newFadeVal) => {
       const colorChange = newFadeVal.value;
       const newColor = 'rgb(220,' + (220 + colorChange) + ',220)';
-      console.log(newColor);
       setBestDealStyle([allStyles.calcBox, {backgroundColor: newColor}]);
     })
   
@@ -99,11 +99,38 @@ export default function App() {
     const listenerId = fadeBoxAnim.addListener((newFadeVal) => {
       const colorChange = newFadeVal.value;
       const newColor = 'rgb(220,' + (220 + colorChange) + ',220)';
-      console.log(newColor);
       setBestDealStyle([allStyles.calcBox, {backgroundColor: newColor}]);
     })
   
   }
+
+  function chooseQuantityImage(side) {
+    
+    let lQuantity = Number(leftQuantity);
+    let rQuantity = Number(rightQuantity);
+
+    if (leftQuantity === '' || rightQuantity == '') {
+      return imageList.empty;
+    }
+
+    if (side === 'left') {
+      if (lQuantity > rQuantity) {
+        return imageList.pileLarge;
+      } 
+      else {
+        return imageList.pileSmall;
+      }
+    }
+    else if (side === 'right') {
+      if (rQuantity > lQuantity) {
+        return imageList.pileLarge;
+      } 
+      else {
+        return imageList.pileSmall;
+      }
+    }
+  }
+
 
   function chooseBoxStyle(isBestDeal) {
 
@@ -178,6 +205,10 @@ export default function App() {
 
   function outputCompare() {
 
+    if(checkBadInput()) {
+      return;
+    }
+
     const lPricePerUnit = Number( leftPrice / leftQuantity );
     const rPricePerUnit = Number( rightPrice / rightQuantity);
 
@@ -213,8 +244,10 @@ export default function App() {
             <InputRow type={'quantity'} defaultValue={''} updateValue={updatetLeftQuantity}/>
           </View>
 
-          <View style={allStyles.calcInputContainer}></View>
-
+          <View style={allStyles.calcImageContainer}>
+            <Image style={allStyles.calcQuantityImage} source={chooseQuantityImage('left')}></Image>
+          </View>
+          
           <View style={allStyles.calcOutputContainer}>
             <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
             <View style={allStyles.calcBoxInputRow}>
@@ -239,7 +272,9 @@ export default function App() {
             <InputRow type={'quantity'} defaultValue={''} updateValue={updateRightQuantity}/>
           </View>
 
-          <View style={allStyles.calcInputContainer}></View>
+          <View style={allStyles.calcImageContainer}>
+            <Image style={allStyles.calcQuantityImage} source={chooseQuantityImage('right')}></Image>
+          </View>
 
           <View style={allStyles.calcOutputContainer}>
             <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>

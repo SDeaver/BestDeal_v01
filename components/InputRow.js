@@ -9,9 +9,9 @@ export default function InputRow({type, defaultValue, updateValue}) {
    const [buttonIsPressed, setButtonIsPressed] = useState(false);
    const [inputValue, setInputValue] = useState(defaultValue);
 
-   function changeValue(newValue){
-      setInputValue(newValue);
-      updateValue(newValue);
+   function changeValue(newVal){
+      setInputValue(newVal);
+      updateValue(newVal);
    }
 
    function clearInput(){

@@ -57,6 +57,17 @@ export const allStyles = StyleSheet.create ({
         backgroundColor: 'white',
         fontSize: 20,
     },
+    calcImageContainer: {
+        flex: 1,
+        marginBottom: 20,
+        marginTop: -10,
+        borderWidth: 0.5,
+        backgroundColor: 'ghostwhite',
+    },
+    calcQuantityImage: {
+        marginTop: -6,
+        alignSelf: 'center',
+    },
     calcBoxOutput: {
         flex: 0.95,
         borderWidth: 1,
