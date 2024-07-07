@@ -6,7 +6,7 @@ import { text } from '../styles/Text';
 function changeButtonStyle(isPressed, isLocked) {
 
    if (isLocked) {
-      return (allStyles.compareButtonLocked);
+     return (allStyles.compareButtonLocked);
    }
    else if (isPressed) {
      return (allStyles.compareButtonPressed);
@@ -16,6 +16,21 @@ function changeButtonStyle(isPressed, isLocked) {
    }
  
  }
+
+function changeButtonTextStyle(isPressed, isLocked) {
+
+   if (isLocked) {
+      return (allStyles.compareButtonTextLocked);
+    }
+    else if (isPressed) {
+      return (allStyles.compareButtonTextPressed);
+    }
+    else {
+      return (allStyles.compareButtonText);
+    }
+  
+}
+
 
 export default function CompareButton({ pressFunction, buttonIsLocked }) {
 
@@ -39,7 +54,7 @@ export default function CompareButton({ pressFunction, buttonIsLocked }) {
          style={changeButtonStyle(buttonIsPressed, buttonIsLocked)}
       >
          <View style={allStyles.verticalCenterView}>
-            <Text style={allStyles.compareButtonText}>{text.compare}</Text>
+            <Text style={changeButtonTextStyle(buttonIsPressed, buttonIsLocked)}>{text.compare}</Text>
          </View>
       </Pressable>
 

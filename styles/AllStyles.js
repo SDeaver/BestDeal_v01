@@ -3,16 +3,22 @@ import { StyleSheet } from 'react-native';
 const colors = {
     bgInput: 'white',
     bgOutput: 'ghostwhite',
-    bgBox: 'rgb(220,220,220)',
-    bgButton: 'rgb(220,220,220)',
-    bgButtonPressed: 'grey',
+    bgBox: 'rgba(213,232,255,0.7)',
+    bgButton: 'lightsteelblue',
+    bgButtonPressed: 'steelblue',
+    bgButtonLocked: 'ghostwhite',
+    text: 'white',
     bdr: 'black'
 }
 
 export const allStyles = StyleSheet.create ({
+    backgroundImg: {
+        // flex: 1,
+        // justifyContent: 'center',
+    },
     mainContainer: {
-        flex: 1, 
-        marginTop: 20
+        height: '100%',
+        width: '100%'
     },
     calcBoxContainer: {
         flexDirection: 'row',
@@ -20,18 +26,16 @@ export const allStyles = StyleSheet.create ({
         paddingTop: 50,
         paddingHorizontal: 10,
         height: 500,
-        // borderWidth: 1,
-        // borderColor: 'blue'
     },
     calcBox: {
         flex: 0.45,
         justifyContent: 'space-evenly',
         borderWidth: 0.5,
+        borderRadius: 5,
         padding: 10,
         height: '100%',
-        backgroundColor: colors.bgBox,
+        backgroundColor: colors.bgBox
     },
-
     calcInputContainer: {
         height: '25%',
     },
@@ -55,6 +59,7 @@ export const allStyles = StyleSheet.create ({
     calcBoxInput: {
         flex: 0.95,
         borderWidth: 0.5,
+        borderRadius: 5,
         padding: 5,
         backgroundColor: colors.bgInput,
         fontSize: 20,
@@ -64,6 +69,7 @@ export const allStyles = StyleSheet.create ({
         marginBottom: 20,
         marginTop: -10,
         borderWidth: 0.5,
+        borderRadius: 5,
         backgroundColor: colors.bgOutput,
     },
     calcQuantityImage: {
@@ -73,6 +79,7 @@ export const allStyles = StyleSheet.create ({
     calcBoxOutput: {
         flex: 0.95,
         borderWidth: 1,
+        borderRadius: 5,
         backgroundColor: colors.bgOutput,
     },
     calcBoxOutputText: {
@@ -80,21 +87,22 @@ export const allStyles = StyleSheet.create ({
         fontSize: 20,
         textAlign: 'center'
     },
-    compareButtonContainer: {
-        flex: 1,
-    },
     clearButton: {
         justifyContent: 'center', 
         width: '12%',
         borderWidth: 0.5,
         borderColor: colors.bdr,
-        backgroundColor: colors.bgInput
+        borderRadius: 5,
+        backgroundColor: colors.bgButton
     },
     clearButtonPressed: {
+        justifyContent: 'center', 
         width: '12%',
-        borderWidth: 0.5,
+        height: '',
+        borderWidth: 0.6,
         borderColor: colors.bdr,
-        backgroundColor: colors.bgButtonPressed
+        borderRadius: 5,
+        backgroundColor: colors.bgButton
     },
     clearButtonText: {
         textAlign: 'center',
@@ -103,34 +111,45 @@ export const allStyles = StyleSheet.create ({
         flex: 1,
         justifyContent: 'center'
     },
+    compareButtonContainer: {
+        flex: 0.3,
+        justifyContent: 'center',
+        height: '15%',
+    },
     compareButton: {
-        marginTop: 20,
         alignSelf: 'center',
-        height: '20%',
+        height: '60%',
         width: '35%',
         borderWidth: 0.5,
+        borderRadius: 5,
         backgroundColor: colors.bgButton
     },
     compareButtonPressed: {
-        marginTop: 20,
         alignSelf: 'center',
-        height: '20%',
-        width: '35%',
-        borderWidth: 0.5,
-        backgroundColor: colors.bgButtonPressed
+        height: '56%',
+        width: '33%',
+        borderWidth: 0.7,
+        borderRadius: 5,
+        backgroundColor: colors.bgButton
     },
     compareButtonLocked: {
-        marginTop: 20,
-        // justifyContent: 'center',
-        // alignItems: 'center',
         alignSelf: 'center',
-        height: '20%',
+        height: '60%',
         width: '35%',
         borderWidth: 1,
-        opacity: 0.5,
-        backgroundColor: colors.bgInput
+        borderRadius: 5,
+        opacity: 0.3,
+        backgroundColor: colors.bgButton
     },
     compareButtonText:{
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    compareButtonTextPressed:{
+        fontSize: 15,
+        textAlign: 'center',
+    },
+    compareButtonTextLocked:{
         fontSize: 16,
         textAlign: 'center',
     },

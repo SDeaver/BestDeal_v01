@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Text, Image, Pressable, View, Keyboard, Animated } from 'react-native';
+import { Text, Image, ImageBackground, Pressable, View, Keyboard, Animated} from 'react-native';
 import { formatCurrency } from "react-native-format-currency";
 
 import InputRow from './components/InputRow';
@@ -228,77 +228,79 @@ export default function App() {
 
   return (
 
-    <Pressable style={allStyles.mainContainer} onPress={Keyboard.dismiss}>
+    <ImageBackground source={imageList.background} resizeMode='cover' style='allStyles.backgroundImg' imageStyle={{opacity:0.15}}>
+      <Pressable style={allStyles.mainContainer} onPress={Keyboard.dismiss}>
 
-      <View style={allStyles.calcBoxContainer}>
+        <View style={allStyles.calcBoxContainer}>
 
-        {/* left box */}
-        <Animated.View style={chooseBoxStyle(leftIsBestDeal)}>
+          {/* left box */}
+          <Animated.View style={chooseBoxStyle(leftIsBestDeal)}>
 
-          <View style={allStyles.calcInputContainer}>
-            <Text style={allStyles.priceTitle}>{text.price}</Text>
-            <InputRow type={'price'} defaultValue={'0'} updateValue={updateLeftPrice}/>
-          </View>
-
-          <View style={allStyles.calcInputContainer}>
-            <Text style={allStyles.quantityTitle}>{text.quantity}</Text>
-            <InputRow type={'quantity'} defaultValue={''} updateValue={updatetLeftQuantity}/>
-          </View>
-
-          <View style={allStyles.calcImageContainer}>
-            <Image style={allStyles.calcQuantityImage} source={chooseQuantityImage('left')}></Image>
-          </View>
-          
-          <View style={allStyles.calcOutputContainer}>
-            <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
-            <View style={allStyles.calcBoxInputRow}>
-                <View style={allStyles.calcBoxOutput}>
-                  <Animated.Text style={[allStyles.calcBoxOutputText, {opacity: fadeAnim}]}>{leftDisplayedPricePerUnit}</Animated.Text>
-                </View>
+            <View style={allStyles.calcInputContainer}>
+              <Text style={allStyles.priceTitle}>{text.price}</Text>
+              <InputRow type={'price'} defaultValue={'0'} updateValue={updateLeftPrice}/>
             </View>
-          </View>
 
-        </Animated.View>
-
-        {/* right box */}
-        <Animated.View style={chooseBoxStyle(rightIsBestDeal)}>
-
-          <View style={allStyles.calcInputContainer}>
-            <Text style={allStyles.priceTitle}>{text.price}</Text>
-            <InputRow type={'price'} defaultValue={'0'} updateValue={updateRightPrice}/>
-          </View>
-
-          <View style={allStyles.calcInputContainer}>
-            <Text style={allStyles.quantityTitle}>{text.quantity}</Text>
-            <InputRow type={'quantity'} defaultValue={''} updateValue={updateRightQuantity}/>
-          </View>
-
-          <View style={allStyles.calcImageContainer}>
-            <Image style={allStyles.calcQuantityImage} source={chooseQuantityImage('right')}></Image>
-          </View>
-
-          <View style={allStyles.calcOutputContainer}>
-            <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
-            <View style={allStyles.calcBoxInputRow}>
-                <View style={allStyles.calcBoxOutput}>
-                  <Animated.Text style={[allStyles.calcBoxOutputText, {opacity: fadeAnim}]}>{rightDisplayedPricePerUnit}</Animated.Text>
-                </View>
+            <View style={allStyles.calcInputContainer}>
+              <Text style={allStyles.quantityTitle}>{text.quantity}</Text>
+              <InputRow type={'quantity'} defaultValue={''} updateValue={updatetLeftQuantity}/>
             </View>
-          </View>
 
-        </Animated.View>
+            <View style={allStyles.calcImageContainer}>
+              <Image style={allStyles.calcQuantityImage} source={chooseQuantityImage('left')}></Image>
+            </View>
+            
+            <View style={allStyles.calcOutputContainer}>
+              <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
+              <View style={allStyles.calcBoxInputRow}>
+                  <View style={allStyles.calcBoxOutput}>
+                    <Animated.Text style={[allStyles.calcBoxOutputText, {opacity: fadeAnim}]}>{leftDisplayedPricePerUnit}</Animated.Text>
+                  </View>
+              </View>
+            </View>
 
-      </View>
+          </Animated.View>
 
-      <View style={allStyles.compareButtonContainer}>
-        <CompareButton pressFunction={outputCompare} buttonIsLocked={checkBadInput()}/>
-      </View>
+          {/* right box */}
+          <Animated.View style={chooseBoxStyle(rightIsBestDeal)}>
 
-      <View style={allStyles.footer}>
-        {/* add footer stuff here */}
-      </View>
+            <View style={allStyles.calcInputContainer}>
+              <Text style={allStyles.priceTitle}>{text.price}</Text>
+              <InputRow type={'price'} defaultValue={'0'} updateValue={updateRightPrice}/>
+            </View>
 
-    </Pressable>
+            <View style={allStyles.calcInputContainer}>
+              <Text style={allStyles.quantityTitle}>{text.quantity}</Text>
+              <InputRow type={'quantity'} defaultValue={''} updateValue={updateRightQuantity}/>
+            </View>
+
+            <View style={allStyles.calcImageContainer}>
+              <Image style={allStyles.calcQuantityImage} source={chooseQuantityImage('right')}></Image>
+            </View>
+
+            <View style={allStyles.calcOutputContainer}>
+              <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
+              <View style={allStyles.calcBoxInputRow}>
+                  <View style={allStyles.calcBoxOutput}>
+                    <Animated.Text style={[allStyles.calcBoxOutputText, {opacity: fadeAnim}]}>{rightDisplayedPricePerUnit}</Animated.Text>
+                  </View>
+              </View>
+            </View>
+
+          </Animated.View>
+
+        </View>
+
+        <View style={allStyles.compareButtonContainer}>
+          <CompareButton pressFunction={outputCompare} buttonIsLocked={checkBadInput()}/>
+        </View>
+
+        <View style={allStyles.footer}>
+          {/* add footer stuff here */}
+        </View>
+
+      </Pressable>
+    </ImageBackground>
   );
 
 } 
