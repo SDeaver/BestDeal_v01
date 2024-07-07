@@ -1,5 +1,14 @@
 import { StyleSheet } from 'react-native';
 
+const colors = {
+    bgInput: 'white',
+    bgOutput: 'ghostwhite',
+    bgBox: 'rgb(220,220,220)',
+    bgButton: 'rgb(220,220,220)',
+    bgButtonPressed: 'grey',
+    bdr: 'black'
+}
+
 export const allStyles = StyleSheet.create ({
     mainContainer: {
         flex: 1, 
@@ -20,16 +29,9 @@ export const allStyles = StyleSheet.create ({
         borderWidth: 0.5,
         padding: 10,
         height: '100%',
-        backgroundColor: 'rgb(220,220,220)',
+        backgroundColor: colors.bgBox,
     },
-    calcBoxBestDeal: {
-        flex: 0.45,
-        justifyContent: 'space-evenly',
-        borderWidth: 0.5,
-        padding: 10,
-        height: '100%',
-        backgroundColor: 'lightgreen',
-    },   
+
     calcInputContainer: {
         height: '25%',
     },
@@ -54,13 +56,24 @@ export const allStyles = StyleSheet.create ({
         flex: 0.95,
         borderWidth: 0.5,
         padding: 5,
-        backgroundColor: 'white',
+        backgroundColor: colors.bgInput,
         fontSize: 20,
+    },
+    calcImageContainer: {
+        flex: 1,
+        marginBottom: 20,
+        marginTop: -10,
+        borderWidth: 0.5,
+        backgroundColor: colors.bgOutput,
+    },
+    calcQuantityImage: {
+        marginTop: -6,
+        alignSelf: 'center',
     },
     calcBoxOutput: {
         flex: 0.95,
         borderWidth: 1,
-        backgroundColor: 'ghostwhite',
+        backgroundColor: colors.bgOutput,
     },
     calcBoxOutputText: {
         padding: 5,
@@ -71,22 +84,24 @@ export const allStyles = StyleSheet.create ({
         flex: 1,
     },
     clearButton: {
+        justifyContent: 'center', 
         width: '12%',
         borderWidth: 0.5,
-        borderColor: 'black',
-        backgroundColor: 'white'
+        borderColor: colors.bdr,
+        backgroundColor: colors.bgInput
     },
     clearButtonPressed: {
         width: '12%',
         borderWidth: 0.5,
-        borderColor: 'black',
-        backgroundColor: 'grey'
-
+        borderColor: colors.bdr,
+        backgroundColor: colors.bgButtonPressed
     },
     clearButtonText: {
-        flex: 1,
         textAlign: 'center',
-        textAlignVertical: 'center'
+    },
+    verticalCenterView: {
+        flex: 1,
+        justifyContent: 'center'
     },
     compareButton: {
         marginTop: 20,
@@ -94,7 +109,7 @@ export const allStyles = StyleSheet.create ({
         height: '20%',
         width: '35%',
         borderWidth: 0.5,
-        backgroundColor: 'rgb(220,220,220)'
+        backgroundColor: colors.bgButton
     },
     compareButtonPressed: {
         marginTop: 20,
@@ -102,26 +117,21 @@ export const allStyles = StyleSheet.create ({
         height: '20%',
         width: '35%',
         borderWidth: 0.5,
-        backgroundColor: 'grey'
+        backgroundColor: colors.bgButtonPressed
     },
     compareButtonLocked: {
         marginTop: 20,
+        // justifyContent: 'center',
+        // alignItems: 'center',
         alignSelf: 'center',
         height: '20%',
         width: '35%',
         borderWidth: 1,
         opacity: 0.5,
-        backgroundColor: 'white'
+        backgroundColor: colors.bgInput
     },
     compareButtonText:{
-        flex: 1,
-        justifyContent: 'space-around',
         fontSize: 16,
         textAlign: 'center',
-        textAlignVertical: 'center',
     },
-    test: {
-        borderWidth: 1,
-        borderColor: 'red',
-    }
 });

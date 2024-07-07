@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { allStyles } from '../styles/AllStyles';
 import { text } from '../styles/Text';
 
@@ -24,15 +24,23 @@ export default function CompareButton({ pressFunction, buttonIsLocked }) {
    return (
       <Pressable
          onPressIn={() => {
+            if (buttonIsLocked) {
+               return;
+            }
             setButtonIsPressed(true);
          }}
          onPressOut={() => {
+            if (buttonIsLocked) {
+               return;
+            }
             pressFunction();
             setButtonIsPressed(false);
          }}
          style={changeButtonStyle(buttonIsPressed, buttonIsLocked)}
       >
-         <Text style={allStyles.compareButtonText}>{text.compare}</Text>
+         <View style={allStyles.verticalCenterView}>
+            <Text style={allStyles.compareButtonText}>{text.compare}</Text>
+         </View>
       </Pressable>
 
    );

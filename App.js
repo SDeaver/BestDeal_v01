@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Text, Pressable, View, Keyboard, Animated } from 'react-native';
+import { Text, Image, Pressable, View, Keyboard, Animated } from 'react-native';
 import { formatCurrency } from "react-native-format-currency";
 
 import InputRow from './components/InputRow';
@@ -7,6 +7,7 @@ import CompareButton from './components/CompareButton';
 
 import { allStyles } from './styles/AllStyles';
 import { animTiming } from './styles/AnimTiming';
+import { imageList } from './styles/ImageList'
 import { text } from './styles/Text';
 
 
@@ -17,29 +18,42 @@ export default function App() {
   const [rightPrice, setRightPrice] = useState('0');
   const [leftQuantity, setLeftQuantity] = useState('');
   const [rightQuantity, setRightQuantity] = useState('');
+  const [leftPricePerUnit, setLeftPricePerUnit] = useState('');
+  const [rightPricePerUnit, setRightPricePerUnit] = useState('');
   const [leftDisplayedPricePerUnit, setLeftDisplayedPricePerUnit] = useState('');
   const [rightDisplayedPricePerUnit, setRightDisplayedPricePerUnit] = useState('');
   const [leftIsBestDeal, setLeftIsBestDeal] = useState(false);
   const [rightIsBestDeal, setRightIsBestDeal] = useState(false);
+  const [bestDealStyle, setBestDealStyle] = useState(allStyles.calcBox);
   const [fadedOut, setFadedOut] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeBoxAnim = useRef(new Animated.Value(0)).current;
 
 
-  function fadeIn() {
+  function pricePerUnitFadeIn(leftVal, rightVal) {
 
-     Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: animTiming.fadeInTime,
-        useNativeDriver: true,
-     }).start(() => {
-        fadeAnim.removeAllListeners();
-     });
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: animTiming.fadeInTime,
+      useNativeDriver: true,
+    }).start(() => {
+      bestDealBoxFadeIn();
+      fadeAnim.removeAllListeners();
+    });
 
-     console.log('firing fadeIn');
+    const listenerId = fadeAnim.addListener((newFadeVal) => {
+        let lPricePerUnit = (newFadeVal.value * leftVal);
+        let rPricePerUnit = (newFadeVal.value * rightVal);
+        const [lPricePerUnitOutput, lValueFormattedWithoutSymbol, lSymbol] = formatCurrency({ amount: Number(lPricePerUnit).toFixed(2), code: text.currencyCode });
+        const [rPricePerUnitOutput, rValueFormattedWithoutSymbol, rSymbol] = formatCurrency({ amount: Number(rPricePerUnit).toFixed(2), code: text.currencyCode });
 
-  };
+        setLeftDisplayedPricePerUnit(lPricePerUnitOutput);
+        setRightDisplayedPricePerUnit(rPricePerUnitOutput);
+    })
 
-  function fadeOut() {
+  }
+
+  function pricePerUnitFadeOut() {
 
      Animated.timing(fadeAnim, {
         toValue: 0,
@@ -50,16 +64,81 @@ export default function App() {
         fadeAnim.removeAllListeners();
      });
 
-     console.log('firing fadeOut');
-  };
+  }
+
+  function bestDealBoxFadeIn() {
+
+    Animated.timing(fadeBoxAnim, {
+      toValue: 35,
+      duration: animTiming.fadeInBoxTime,
+      useNativeDriver: true,
+    }).start(() => {
+      fadeBoxAnim.removeAllListeners();
+    });
+
+    const listenerId = fadeBoxAnim.addListener((newFadeVal) => {
+      const colorChange = newFadeVal.value;
+      const newColor = 'rgb(220,' + (220 + colorChange) + ',220)';
+      setBestDealStyle([allStyles.calcBox, {backgroundColor: newColor}]);
+    })
+  
+  }
+
+  function bestDealBoxFadeOut() {
+
+    Animated.timing(fadeBoxAnim, {
+      toValue: 0,
+      duration: animTiming.fadeOutBoxTime,
+      useNativeDriver: true,
+    }).start(() => {
+      setLeftIsBestDeal(false);
+      setRightIsBestDeal(false);
+      fadeBoxAnim.removeAllListeners();
+    });
+
+    const listenerId = fadeBoxAnim.addListener((newFadeVal) => {
+      const colorChange = newFadeVal.value;
+      const newColor = 'rgb(220,' + (220 + colorChange) + ',220)';
+      setBestDealStyle([allStyles.calcBox, {backgroundColor: newColor}]);
+    })
+  
+  }
+
+  function chooseQuantityImage(side) {
+    
+    let lQuantity = Number(leftQuantity);
+    let rQuantity = Number(rightQuantity);
+
+    if (leftQuantity === '' || rightQuantity == '') {
+      return imageList.empty;
+    }
+
+    if (side === 'left') {
+      if (lQuantity > rQuantity) {
+        return imageList.pileLarge;
+      } 
+      else {
+        return imageList.pileSmall;
+      }
+    }
+    else if (side === 'right') {
+      if (rQuantity > lQuantity) {
+        return imageList.pileLarge;
+      } 
+      else {
+        return imageList.pileSmall;
+      }
+    }
+  }
+
 
   function chooseBoxStyle(isBestDeal) {
 
     if (isBestDeal) {
-       return (allStyles.calcBoxBestDeal);
+      return (bestDealStyle);
     }
     else {
-       return (allStyles.calcBox);
+      return (allStyles.calcBox);
     }
 
   }
@@ -89,11 +168,9 @@ export default function App() {
     if (fadedOut) {
       return;
     }
-
-    setLeftIsBestDeal(false);
-    setRightIsBestDeal(false);
-
-    fadeOut();
+    
+    pricePerUnitFadeOut();
+    bestDealBoxFadeOut();
 
   }
 
@@ -126,21 +203,26 @@ export default function App() {
     }
   }
 
+
   function outputCompare() {
 
-    const leftPricePerUnit = Number( leftPrice / leftQuantity );
-    const rightPricePerUnit = Number( rightPrice / rightQuantity);
+    const lPricePerUnit = Number( leftPrice / leftQuantity );
+    const rPricePerUnit = Number( rightPrice / rightQuantity);
 
-    const [leftPricePerUnitOutput, leftValueFormattedWithoutSymbol, leftSymbol] = formatCurrency({ amount: Number(leftPricePerUnit).toFixed(2), code: text.currencyCode });
-    const [rightPricePerUnitOutput, rightValueFormattedWithoutSymbol, rightSymbol] = formatCurrency({ amount: Number(rightPricePerUnit).toFixed(2), code: text.currencyCode });
+    if ((lPricePerUnit === leftPricePerUnit) && (rPricePerUnit === rightPricePerUnit)) {
+      return;
+    }
 
-    setLeftDisplayedPricePerUnit(leftPricePerUnitOutput); 
-    setRightDisplayedPricePerUnit(rightPricePerUnitOutput);
+    setLeftPricePerUnit(lPricePerUnit); 
+    setRightPricePerUnit(rPricePerUnit); 
 
-    setLeftIsBestDeal(!(leftPricePerUnit > rightPricePerUnit));
-    setRightIsBestDeal(!(leftPricePerUnit < rightPricePerUnit));
+    setLeftIsBestDeal(!(lPricePerUnit > rPricePerUnit));
+    setRightIsBestDeal(!(lPricePerUnit < rPricePerUnit));
 
-    fadeIn(); 
+    setLeftDisplayedPricePerUnit('$0.00');
+    setRightDisplayedPricePerUnit('$0.00');
+
+    pricePerUnitFadeIn(lPricePerUnit, rPricePerUnit); 
     setFadedOut(false);
   }  
 
@@ -163,8 +245,10 @@ export default function App() {
             <InputRow type={'quantity'} defaultValue={''} updateValue={updatetLeftQuantity}/>
           </View>
 
-          <View style={allStyles.calcInputContainer}></View>
-
+          <View style={allStyles.calcImageContainer}>
+            <Image style={allStyles.calcQuantityImage} source={chooseQuantityImage('left')}></Image>
+          </View>
+          
           <View style={allStyles.calcOutputContainer}>
             <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
             <View style={allStyles.calcBoxInputRow}>
@@ -189,7 +273,9 @@ export default function App() {
             <InputRow type={'quantity'} defaultValue={''} updateValue={updateRightQuantity}/>
           </View>
 
-          <View style={allStyles.calcInputContainer}></View>
+          <View style={allStyles.calcImageContainer}>
+            <Image style={allStyles.calcQuantityImage} source={chooseQuantityImage('right')}></Image>
+          </View>
 
           <View style={allStyles.calcOutputContainer}>
             <Text style={allStyles.perUnitTitle}>{text.pricePerUnit}</Text>
