@@ -168,6 +168,7 @@ export default function App() {
     if (fadedOut) {
       return;
     }
+    
     pricePerUnitFadeOut();
     bestDealBoxFadeOut();
 
@@ -205,19 +206,19 @@ export default function App() {
 
   function outputCompare() {
 
-    if(checkBadInput()) {
-      return;
-    }
-
     const lPricePerUnit = Number( leftPrice / leftQuantity );
     const rPricePerUnit = Number( rightPrice / rightQuantity);
 
+    if ((lPricePerUnit === leftPricePerUnit) && (rPricePerUnit === rightPricePerUnit)) {
+      return;
+    }
+
     setLeftPricePerUnit(lPricePerUnit); 
-    setRightPricePerUnit(rPricePerUnit);
+    setRightPricePerUnit(rPricePerUnit); 
 
     setLeftIsBestDeal(!(lPricePerUnit > rPricePerUnit));
     setRightIsBestDeal(!(lPricePerUnit < rPricePerUnit));
-    
+
     setLeftDisplayedPricePerUnit('$0.00');
     setRightDisplayedPricePerUnit('$0.00');
 
