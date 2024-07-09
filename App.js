@@ -8,7 +8,7 @@ import { useFonts } from 'expo-font';
 import InputRow from './components/InputRow';
 import CompareButton from './components/CompareButton';
 
-import { allStyles, allFonts } from './styles/AllStyles';
+import { allStyles, allFonts, colors } from './styles/AllStyles';
 import { animTiming } from './styles/AnimTiming';
 import { imageList } from './styles/ImageList'
 import { text } from './styles/Text';
@@ -75,7 +75,7 @@ export default function App() {
   function bestDealBoxFadeIn() {
 
     Animated.timing(fadeBoxAnim, {
-      toValue: 35,
+      toValue: 1,
       duration: animTiming.fadeInBoxTime,
       useNativeDriver: true,
     }).start(() => {
@@ -83,9 +83,17 @@ export default function App() {
     });
 
     const listenerId = fadeBoxAnim.addListener((newFadeVal) => {
-      const colorChange = newFadeVal.value;
-      const newColor = 'rgb(220,' + (220 + colorChange) + ',220)';
+
+      const colorChange = {
+        r: (colors.bgBox.r + ((colors.bgBoxBestDeal.r - colors.bgBox.r) * newFadeVal.value)),
+        g: (colors.bgBox.g + ((colors.bgBoxBestDeal.g - colors.bgBox.g) * newFadeVal.value)),
+        b: (colors.bgBox.b + ((colors.bgBoxBestDeal.b - colors.bgBox.b) * newFadeVal.value)),
+        a: (colors.bgBox.a + ((colors.bgBoxBestDeal.a - colors.bgBox.a) * newFadeVal.value))
+      }
+      const newColor = `rgba(${colorChange.r},${colorChange.g},${colorChange.b},${colorChange.a})`;
+      console.log(newColor);
       setBestDealStyle([allStyles.calcBox, {backgroundColor: newColor}]);
+
     })
   
   }
@@ -103,9 +111,17 @@ export default function App() {
     });
 
     const listenerId = fadeBoxAnim.addListener((newFadeVal) => {
-      const colorChange = newFadeVal.value;
-      const newColor = 'rgb(220,' + (220 + colorChange) + ',220)';
+
+      const colorChange = {
+        r: (colors.bgBox.r + ((colors.bgBoxBestDeal.r - colors.bgBox.r) * newFadeVal.value)),
+        g: (colors.bgBox.g + ((colors.bgBoxBestDeal.g - colors.bgBox.g) * newFadeVal.value)),
+        b: (colors.bgBox.b + ((colors.bgBoxBestDeal.b - colors.bgBox.b) * newFadeVal.value)),
+        a: (colors.bgBox.a + ((colors.bgBoxBestDeal.a - colors.bgBox.a) * newFadeVal.value))
+      }
+      const newColor = `rgba(${colorChange.r},${colorChange.g},${colorChange.b},${colorChange.a})`;
+      console.log(newColor);
       setBestDealStyle([allStyles.calcBox, {backgroundColor: newColor}]);
+
     })
   
   }
@@ -217,18 +233,15 @@ export default function App() {
     const lPricePerUnit = Number( leftPrice / leftQuantity );
     const rPricePerUnit = Number( rightPrice / rightQuantity);
 
-    if ((lPricePerUnit === leftPricePerUnit) && (rPricePerUnit === rightPricePerUnit)) {
-      return;
-    }
+    // if ((lPricePerUnit === leftPricePerUnit) && (rPricePerUnit === rightPricePerUnit)) {
+    //   return;
+    // }
 
     setLeftPricePerUnit(lPricePerUnit); 
     setRightPricePerUnit(rPricePerUnit); 
 
     setLeftIsBestDeal(!(lPricePerUnit > rPricePerUnit));
     setRightIsBestDeal(!(lPricePerUnit < rPricePerUnit));
-
-    setLeftDisplayedPricePerUnit('$0.00');
-    setRightDisplayedPricePerUnit('$0.00');
 
     pricePerUnitFadeIn(lPricePerUnit, rPricePerUnit); 
     setFadedOut(false);

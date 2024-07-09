@@ -1,10 +1,20 @@
 import { StyleSheet } from 'react-native';
 
-const colors = {
+export const colors = {
     bgInput: 'white',
     bgOutput: 'ghostwhite',
-    bgBox: 'rgba(213,232,255,0.7)',
-    bgBoxBestDeal: 'rgba(255,215,0,1)',
+    bgBox: {
+        r: 213,
+        g: 232,
+        b: 255,
+        a: 0.7
+    },
+    bgBoxBestDeal: {
+        r: 255,
+        g: 215,
+        b: 0,
+        a: 0.7
+    },
     bgButton: 'lightsteelblue',
     bgButtonPressed: 'steelblue',
     bgButtonLocked: 'ghostwhite',
@@ -37,7 +47,7 @@ export const allStyles = StyleSheet.create ({
         borderRadius: 5,
         padding: 10,
         height: '100%',
-        backgroundColor: colors.bgBox
+        backgroundColor: `'rgba(${colors.bgBox.r},${colors.bgBox.g},${colors.bgBox.b},${colors.bgBox.a})'`
     },
     calcInputContainer: {
         height: '25%',
