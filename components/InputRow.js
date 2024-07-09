@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import { Text, TextInput, View, Pressable } from 'react-native';
+import { Text, TextInput, View, Pressable, Image } from 'react-native';
 import CurrencyInput from 'react-native-currency-input';
 import { allStyles } from '../styles/AllStyles';
+import { imageList } from '../styles/ImageList';
 import { text } from '../styles/Text';
 
 export default function InputRow({type, defaultValue, updateValue}) {
@@ -56,7 +57,7 @@ export default function InputRow({type, defaultValue, updateValue}) {
 
                style={changeButtonStyle(buttonIsPressed)}
             >
-                  <Text style={allStyles.clearButtonText}>x</Text>
+                  <Image style={allStyles.clearButtonImage} source={imageList.iconClear} />
             </Pressable>
          </View>
       );
@@ -82,7 +83,7 @@ export default function InputRow({type, defaultValue, updateValue}) {
                }}
                style={changeButtonStyle(buttonIsPressed)}
             >
-               <Text style={allStyles.clearButtonText}>x</Text>
+                  <Image style={allStyles.clearButtonImage} source={imageList.iconClear} />
             </Pressable>
          </View>
       );

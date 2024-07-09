@@ -4,6 +4,7 @@ const colors = {
     bgInput: 'white',
     bgOutput: 'ghostwhite',
     bgBox: 'rgba(213,232,255,0.7)',
+    bgBoxBestDeal: 'rgba(255,215,0,1)',
     bgButton: 'lightsteelblue',
     bgButtonPressed: 'steelblue',
     bgButtonLocked: 'ghostwhite',
@@ -11,21 +12,23 @@ const colors = {
     bdr: 'black'
 }
 
+export const allFonts = {
+    fontMain: require('../assets/fonts/Lato-Regular.ttf')
+}
+
 export const allStyles = StyleSheet.create ({
     backgroundImg: {
-        // flex: 1,
-        // justifyContent: 'center',
     },
     mainContainer: {
-        height: '100%',
-        width: '100%'
+        height: 800,
+        width: '100%',
     },
     calcBoxContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         paddingTop: 50,
         paddingHorizontal: 10,
-        height: 500,
+        height: 520,
     },
     calcBox: {
         flex: 0.45,
@@ -43,13 +46,20 @@ export const allStyles = StyleSheet.create ({
         height: '25%',
     },
     priceTitle: {
-        fontSize: 16
+        fontFamily: 'fontMain',
+        fontSize: 18,
+        paddingTop: 4,
+        paddingBottom: 4
     },
     quantityTitle: {
-        fontSize: 16,
+        fontFamily: 'fontMain',
+        fontSize: 18,
+        paddingBottom: 4
     },
     perUnitTitle: {
-        fontSize: 16,
+        fontFamily: 'fontMain',
+        fontSize: 18,
+        paddingBottom: 4
     },
     calcBoxInputRow: {
         flexDirection: 'row',
@@ -99,26 +109,27 @@ export const allStyles = StyleSheet.create ({
         justifyContent: 'center', 
         width: '12%',
         height: '',
-        borderWidth: 0.6,
+        borderWidth: 1.5,
         borderColor: colors.bdr,
         borderRadius: 5,
         backgroundColor: colors.bgButton
     },
-    clearButtonText: {
-        textAlign: 'center',
+    clearButtonImage: {
+        height: 8,
+        resizeMode: 'contain',
+        alignSelf: 'center'
     },
     verticalCenterView: {
         flex: 1,
         justifyContent: 'center'
     },
     compareButtonContainer: {
-        flex: 0.3,
         justifyContent: 'center',
-        height: '15%',
+        height: 80,
     },
     compareButton: {
         alignSelf: 'center',
-        height: '60%',
+        height: 46,
         width: '35%',
         borderWidth: 0.5,
         borderRadius: 5,
@@ -126,7 +137,7 @@ export const allStyles = StyleSheet.create ({
     },
     compareButtonPressed: {
         alignSelf: 'center',
-        height: '56%',
+        height: 44,
         width: '33%',
         borderWidth: 0.7,
         borderRadius: 5,
@@ -134,23 +145,28 @@ export const allStyles = StyleSheet.create ({
     },
     compareButtonLocked: {
         alignSelf: 'center',
-        height: '60%',
+        height: 46,
         width: '35%',
         borderWidth: 1,
         borderRadius: 5,
         opacity: 0.3,
-        backgroundColor: colors.bgButton
+        backgroundColor: colors.bgButton,
     },
     compareButtonText:{
-        fontSize: 16,
+        fontSize: 17,
+        fontFamily: 'fontMain',
         textAlign: 'center',
     },
     compareButtonTextPressed:{
-        fontSize: 15,
+        fontSize: 16,
+        fontFamily: 'fontMain',
         textAlign: 'center',
     },
     compareButtonTextLocked:{
-        fontSize: 16,
+        fontSize: 17,
+        fontFamily: 'fontMain',
         textAlign: 'center',
     },
 });
+
+

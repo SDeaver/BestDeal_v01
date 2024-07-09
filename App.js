@@ -1,16 +1,23 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Text, Image, ImageBackground, Pressable, View, Keyboard, Animated} from 'react-native';
 import { formatCurrency } from "react-native-format-currency";
+
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
 
 import InputRow from './components/InputRow';
 import CompareButton from './components/CompareButton';
 
-import { allStyles } from './styles/AllStyles';
+import { allStyles, allFonts } from './styles/AllStyles';
 import { animTiming } from './styles/AnimTiming';
 import { imageList } from './styles/ImageList'
 import { text } from './styles/Text';
 
 
+
+
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
 
@@ -26,9 +33,8 @@ export default function App() {
   const [rightIsBestDeal, setRightIsBestDeal] = useState(false);
   const [bestDealStyle, setBestDealStyle] = useState(allStyles.calcBox);
   const [fadedOut, setFadedOut] = useState(true);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current; 
   const fadeBoxAnim = useRef(new Animated.Value(0)).current;
-
 
   function pricePerUnitFadeIn(leftVal, rightVal) {
 
@@ -109,10 +115,14 @@ export default function App() {
     let lQuantity = Number(leftQuantity);
     let rQuantity = Number(rightQuantity);
 
+
     if (leftQuantity === '' || rightQuantity == '') {
       return imageList.empty;
     }
-
+    else if (isNaN(leftQuantity) || isNaN(rightQuantity)) {
+      return imageList.empty;
+    }
+   
     if (side === 'left') {
       if (lQuantity > rQuantity) {
         return imageList.pileLarge;
@@ -130,7 +140,6 @@ export default function App() {
       }
     }
   }
-
 
   function chooseBoxStyle(isBestDeal) {
 
@@ -203,7 +212,6 @@ export default function App() {
     }
   }
 
-
   function outputCompare() {
 
     const lPricePerUnit = Number( leftPrice / leftQuantity );
@@ -226,9 +234,30 @@ export default function App() {
     setFadedOut(false);
   }  
 
+
+  // font loading code
+
+  const [fontsLoaded, fontError] = useFonts({
+    'fontMain': allFonts.fontMain,
+  });
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
+
+
+  // main code
+
   return (
 
-    <ImageBackground source={imageList.background} resizeMode='cover' style='allStyles.backgroundImg' imageStyle={{opacity:0.15}}>
+    <ImageBackground source={imageList.background} style='allStyles.backgroundImg' imageStyle={{opacity:0.15}}>
       <Pressable style={allStyles.mainContainer} onPress={Keyboard.dismiss}>
 
         <View style={allStyles.calcBoxContainer}>
@@ -302,5 +331,6 @@ export default function App() {
       </Pressable>
     </ImageBackground>
   );
+  
 
 } 
